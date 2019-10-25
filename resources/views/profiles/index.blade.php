@@ -4,18 +4,26 @@
 <div class="container">
     <div class="row">
         <div class="col-3 p-5">
-            <img src="https://scontent-syd2-1.cdninstagram.com/vp/4190058411fd538eca487caa98d8a074/5E2ADE5D/t51.2885-19/s150x150/59381178_2348911458724961_5863612957363011584_n.jpg?_nc_ht=scontent-syd2-1.cdninstagram.com"
-                class="rounded-circle">
+            <img src="{{ $user->profile->profileImage() }}" class="rounded-circle w-100">
         </div>
         <div class="col-9 pt-5">
             <div class="d-flex justify-content-between align-items-baseline">
-                <h1>{{ $user->username}}</h1>
+                <div class="d-flex align-items-center pb-3">
+                    <div class="h4">{{ $user->username}}</div>
+
+                    <follow-button user-id="{{ $user->id }}" follows="{{ $follows }}"></follow-button>
+                </div>
+                @can('update', $user->profile)
                 <a href="/p/create">Add new post</a>
+                @endcan
             </div>
+            @can('update', $user->profile)
+            <a href="/profile/{{ $user->id }}/edit">Edit Profile</a>
+            @endcan
             <div class="d-flex">
-                <div class="pr-5"><strong>{{ $user->posts->count() }}</strong> posts</div>
-                <div class="pr-5"><strong>314m</strong> followers</div>
-                <div class="pr-5"><strong>221</strong> following</div>
+                <div class="pr-5"><strong>{{ $postCount }}</strong> posts</div>
+                <div class="pr-5"><strong>{{ $followersCount }}</strong> followers</div>
+                <div class="pr-5"><strong>{{ $followingCount }}</strong> following</div>
             </div>
             <div class="pt-4 font-weight-bold">{{ $user->profile->title }}</div>
             <div>{{ $user->profile->description }}</div>
@@ -24,17 +32,16 @@
     </div>
 
     <div class="row pt-5">
-       @foreach($user->posts as $post) 
-       <div class="col-4 pb-4">
+        @foreach($user->posts as $post)
+        <div class="col-4 pb-4">
             <a href="/p/{{  $post->id }}">
-            <img src="/storage/{{ $post->image }}"
-                class="w-100">
+                <img src="/storage/{{ $post->image }}" class="w-100">
             </a>
         </div>
-       @endforeach
+        @endforeach
 
 
-        
+
     </div>
 </div>
 @endsection
